@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<style>
+body, html {
+  text-align: center;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(#ff73d6, #fbdeff);
+  font-family: sans-serif;
+  font-size: 60px;
+  color: white;
+}
+</style>
+<script src="../lib/snap.svg-min.js"></script>
+<script src="../lib/underscore-min.js"></script>
+<script src="../lib/verlet-1.0.0.min.js"></script>
+<script>
+VerletJS.prototype.mesh = function (svg, stiffness) {
+    var vertices = getUniqueVertices(svg);
+    var edges = getUniqueEdges(svg);
+    var edgeMap = getEdgeMap(vertices, edges);
+    var composite = new this.Composite();
+    composite.particles = vertices.map(function (vertex) {
+        var particle = new Particle(new Vec2(vertex.x, vertex.y));
+        particle.firstPos = new Vec2(vertex.x, vertex.y);
+        particle.effects = [];
+        return particle;
+    })
+    composite.constraints = edgeMap.map(function (edge) {
+        return new DistanceConstraint(
+            composite.particles[edge[0]],
+            composite.particles[edge[1]],
+            stiffness);
+    })
+    attachPhysics(svg, vertices, composite.particles);
+    this.composites.push(composite);
+    return composite;
+}
+
+function attachPhysics(obj, vertices, particles) {
+    var polygons = obj.selectAll('polygon');
+    polygons.forEach(function (polygon) {
+        var points = polygon.node.points;
+        for(var i = 0; i < points.length; i++) {
+            var j = _.findIndex(vertices, points[i]);
+            particles[j].effects.push(points[i]);
+        }
+    })
+}
+
+function updatePhysics(mesh) {
+    mesh.particles.forEach(function (particle) {
+        particle.effects.forEach(function (effect) {
+            effect.x = particle.pos.x;
+            effect.y = particle.pos.y;
+        })
+    })
+}
+
+function resetPhysics(mesh) {
+    mesh.particles.forEach(function (particle) {
+        particle.pos.x = particle.firstPos.x;
+        particle.pos.y = particle.firstPos.y;
+        particle.lastPos.x = particle.firstPos.x;
+        particle.lastPos.y = particle.firstPos.y;
+    })
+}
+
+function getUnique(all) {
+    var unique = [];
+    all.forEach(function (obj) {
+        var matches = unique.filter(function (cur) {
+            return _.isEqual(cur, obj);
+        })
+        if(matches.length == 0) {
+            unique.push(obj);
+        }
+    })
+    return unique;
+}
+
+function getUniqueVertices(obj) {
+    var allVertices = [];
+    var polygons = obj.selectAll('polygon');
+    polygons.forEach(function (polygon) {
+        var points = polygon.node.points;
+        for(var i = 0; i < points.length; i++) {
+            var vertex = {x: points[i].x, y: points[i].y};
+            allVertices.push(vertex);
+        }
+    })
+    return getUnique(allVertices);
+}
+
+function getUniqueEdges(obj) {
+    var allEdges = [];
+    var polygons = obj.selectAll('polygon');
+    polygons.forEach(function (polygon) {
+        var points = polygon.node.points;
+        var pointObjects = [];
+        for(var i = 0; i < points.length; i++) {
+            var point = {x: points[i].x, y: points[i].y};
+            pointObjects.push(point);
+        }
+        var a = [pointObjects[0], pointObjects[1]];
+        var b = [pointObjects[1], pointObjects[2]];
+        var c = [pointObjects[2], pointObjects[0]];
+        allEdges.push(_.sortBy(_.sortBy(a, 'y'), 'x'));
+        allEdges.push(_.sortBy(_.sortBy(b, 'y'), 'x'));
+        allEdges.push(_.sortBy(_.sortBy(c, 'y'), 'x'));
+    })
+    return getUnique(allEdges);
+}
+
+function getEdgeMap(points, edges) {
+    return edges.map(function (edge) {
+        return [_.findIndex(points, edge[0]), _.findIndex(points, edge[1])];
+    })
+}
+
+window.onload = function () {
+    var canvas = document.getElementById('scratch');
+
+    // canvas dimensions
+    var width = parseInt(canvas.style.width);
+    var height = parseInt(canvas.style.height);
+
+    // retina
+    var dpr = window.devicePixelRatio || 1;
+    canvas.width = width*dpr;
+    canvas.height = height*dpr;
+    canvas.getContext("2d").scale(dpr, dpr);
+
+    // simulation
+    var sim = new VerletJS(width, height, canvas);
+    sim.friction = .4;
+    sim.gravity = new Vec2(0, 0);
+    sim.highlightColor = "#555";
+    var stiffness = .1;
+
+    var s = Snap(400, 400);
+    Snap.load("media/heart.svg", function (file) {
+        var svg = s.append(file);
+        var heart = svg.select('g');
+        mesh = sim.mesh(heart, stiffness);
+
+        // animation loop
+        var loop = function () {
+            sim.frame(16);
+            sim.draw();
+            updatePhysics(mesh);
+            requestAnimFrame(loop);
+        };
+
+        s.node.onmousedown = function (e) {
+            resetPhysics(mesh);
+        }
+
+        loop();
+    });
+};
+</script>
+</head>
+<body>
+<canvas id="scratch" style="width: 400px; height: 400px;"></canvas>
+</body>
+</html>

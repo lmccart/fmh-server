@@ -1,3 +1,7 @@
+<!--
+    soft pin: constraint connecting a free point to a pinned point. do this for a few points
+    
+    -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,9 +18,9 @@ body, html {
   color: white;
 }
 </style>
-<script src="../lib/snap.svg-min.js"></script>
-<script src="../lib/underscore-min.js"></script>
-<script src="../lib/verlet-1.0.0.min.js"></script>
+<script src="lib/snap.svg-min.js"></script>
+<script src="lib/underscore-min.js"></script>
+<script src="lib/verlet-1.0.0.min.js"></script>
 <script>
 VerletJS.prototype.mesh = function (svg, stiffness) {
     var vertices = getUniqueVertices(svg);

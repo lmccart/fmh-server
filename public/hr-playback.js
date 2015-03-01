@@ -14,7 +14,7 @@ $(document).ready(function() {
   });
 
 
-  setInterval(updateHR, 1000);
+  setInterval(updateHR, 100);
 
   function updateHR() {
 

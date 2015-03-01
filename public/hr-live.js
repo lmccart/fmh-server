@@ -1,4 +1,4 @@
-  setInterval(updateHR, 100);
+  setInterval(updateHR, 1000);
 
   function updateHR() {
     $.getJSON('https://followmyheart.herokuapp.com/get_hr', function(data) {

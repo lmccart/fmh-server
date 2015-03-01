@@ -1,20 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang='en'>
 <head>
   <title>#FOLLOWMYHEART</title>
-  <meta charset="UTF-8" />
-  <script type="text/javascript" src="lib/verlet-1.0.0.min.js"></script>
-  <script data-main="app" src="lib/jquery.js"></script>
-  <script>
-  setInterval(updateHR, 100);
-
-  function updateHR() {
-    $.getJSON('/get_hr', function(data) {
-      $('#hr').html(data.hr);
-    });
-  }
-
-  </script>
+  <meta charset='UTF-8' />
+  <script type='text/javascript' src='lib/verlet-1.0.0.min.js'></script>
+  <script data-main='app' src='lib/jquery.js'></script>
+  <script type='text/javascript' src='hr-live.js'></script>
   <style>
     body, html {
       text-align: center;
@@ -29,8 +20,8 @@
   </style>
 </head>
 <body>
-<canvas id="scratch" style="width: 800px; height: 500px;"></canvas>
-<script type="text/javascript" src="lib/heart.js"></script>
+<canvas id='scratch' style='width: 800px; height: 500px;'></canvas>
+<script type='text/javascript' src='lib/heart.js'></script>
 <p>#FOLLOWMYHEART: <span id='hr'>0</span></p>
 </body>
 </html>

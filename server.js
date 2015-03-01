@@ -43,7 +43,7 @@ app.get('/update_hr', function (req, res) {
 
   var r = { hr: hr, timestamp: new Date().getTime() };
 
-  reports.insert(r, function(err, result) {
+  stored_hr.insert(r, function(err, result) {
     assert.equal(err, null);
     console.log("inserted");
   });

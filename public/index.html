@@ -3,9 +3,12 @@
 <head>
   <title>#FOLLOWMYHEART</title>
   <meta charset='UTF-8' />
-  <script type='text/javascript' src='lib/verlet-1.0.0.min.js'></script>
   <script data-main='app' src='lib/jquery.js'></script>
+  <script type='text/javascript' src='lib/verlet-1.0.0.min.js'></script>
   <script type='text/javascript' src='hr-playback.js'></script>
+  <script type='text/javascript' src='lib/snap.svg-min.js'></script>
+  <script type='text/javascript' src='lib/underscore-min.js'></script>
+  <script type='text/javascript' src='heart.js'></script>
   <!--<script type='text/javascript' src='hr-live.js'></script>-->
   <script type='text/javascript'>
   $(document).ready(function() {
@@ -99,9 +102,9 @@
   </style>
 </head>
 <body>
-<canvas id='scratch' style='width: 800px; height: 500px;'></canvas>
-<script type='text/javascript' src='lib/heart.js'></script>
-<p>#FOLLOWMYHEART: <span id='hr'>0</span></p>
+<svg id='heart' style='width: 350px; height: 300px;'></svg>
+<canvas id='debug' style='width: 350px; height: 300px; display: none'></canvas>
+<p>#FOLLOWMYHEART</p>
 <p id='clock'></p>
 <p id='info_button'>i</p>
 <div id='info_container'>
@@ -110,7 +113,7 @@
   <div class='x'>x</div>
   <div class='credits'>
     <p><b>#FOLLOWMYHEART</b><br>
-    by LaBeouf, R&ouml;nkko &amp; Turner, 2015</p>
+    by LaBeouf, R&ouml;nkk&ouml; &amp; Turner, 2015</p>
 
     <p style='margin-top:20px'>commissioned by<br>
     <a href='http://dazeddigital.com'><img width='75px' style='margin-top:5px' src='imgs/dazed.png'/></a></p>

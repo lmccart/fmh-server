@@ -170,8 +170,8 @@ function getEdgeMap(points, edges) {
     })
 }
 
-window.onload = function () {
-    var canvas = document.getElementById('scratch');
+window.addEventListener('load', function () {
+    var canvas = document.getElementById('debug');
     var width = parseInt(canvas.style.width);
     var height = parseInt(canvas.style.height);
     var dpr = window.devicePixelRatio || 1;
@@ -191,8 +191,8 @@ window.onload = function () {
     var bump = 8;
     var range = 20;
 
-    var s = Snap(document.getElementById('main'));
-    Snap.load("media/heart.svg", function (file) {
+    var s = Snap(document.getElementById('heart'));
+    Snap.load("imgs/heart.svg", function (file) {
         var svg = s.append(file);
         var heart = svg.select('g');
         mesh = sim.mesh(heart, stiffness);
@@ -249,5 +249,5 @@ window.onload = function () {
 
         loop();
         heartbeat();
-    });
-};
+    })
+})

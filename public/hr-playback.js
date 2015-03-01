@@ -39,8 +39,8 @@ $(document).ready(function() {
         break;
       }
     }
-    console.log(offset + start_time, ind);
+    // console.log(offset + start_time, ind);
     
-    $('#hr').html(data[ind].hr);
+    // $('#hr').html(data[ind].hr);
   }
 });

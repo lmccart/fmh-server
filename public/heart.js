@@ -191,6 +191,7 @@ window.addEventListener('load', function () {
     var bump = 8;
     var range = 20;
 
+    var heartbeatSound = new Howl({ urls: ['sound/heartbeat.mp3', 'sound/heartbeat.ogg'] });
     var s = Snap(document.getElementById('heart'));
     Snap.load("imgs/heart.svg", function (file) {
         var svg = s.append(file);
@@ -242,9 +243,13 @@ window.addEventListener('load', function () {
             var heartTimeout = 60. * 1000. / heartrate;
             setTimeout(function() { heartbeatOn() }, 0);
             setTimeout(function() { heartbeatOff() }, lerp(heartStyle, 100, 50));
-            setTimeout(function() { heartbeatOn() }, lerp(heartStyle, 200, 100));
-            setTimeout(function() { heartbeatOff() }, lerp(heartStyle, 350, 100));
+            if(heartrate < 100) {
+                setTimeout(function() { heartbeatOn() }, lerp(heartStyle, 200, 100));
+                setTimeout(function() { heartbeatOff() }, lerp(heartStyle, 350, 100));
+            }
             setTimeout(function() { heartbeat() }, heartTimeout);
+
+            heartbeatSound.play();
         }
 
         loop();

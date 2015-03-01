@@ -1,174 +1,253 @@
+var heartrate = 60;
 
-function compact(x) {
-  var result = [];
-  for(var i in x)
-    if(x[i])
-      result.push(x[i]);
-  return result;
+function clamp(x, min, max) {
+    if(x < min) return min;
+    if(x > max) return max;
+    return x;
 }
 
-VerletJS.prototype.heart = function(origin, width, height, stiffness) {
-  var ignore = [
-    0, 3, 6,
-    21, 27,
-    28, 29, 33, 34,
-    35, 36, 37, 39, 40, 41];
-
-  var composite = new this.Composite();
-
-  var segments = new Vec2(7, 6);
-  var xStride = width/segments.x;
-  var yStride = height/segments.y;
-
-  var remove = [];
-  for (var y=0;y<segments.y;++y) {
-    for (var x=0;x<segments.x;++x) {
-      var i = y*segments.x + x;
-      var px = origin.x + x*xStride - width/2 + xStride/2;
-      var py = origin.y + y*yStride - height/2 + yStride/2;
-      var p = new Particle(new Vec2(px, py));
-      composite.particles.push(p);
-
-      if(ignore.indexOf(i) > -1)
-        remove.push(p);
-
-      if (x > 0)
-        composite.constraints.push(new DistanceConstraint(
-          p,
-          composite.particles[y*segments.x+x-1],
-          stiffness));
-      
-      if (y > 0)
-        composite.constraints.push(new DistanceConstraint(
-          p,
-          composite.particles[(y-1)*segments.x+x],
-          stiffness));
-
-      // left side
-      if(x > 0 && y > 0 && x <= 3) {
-        composite.constraints.push(new DistanceConstraint(
-          p,
-          composite.particles[(y-1)*segments.x+(x-1)],
-          stiffness));
-      }
-
-      // right side
-      if(x < segments.x-1 && y > 0 && x >= 3) {
-        composite.constraints.push(new DistanceConstraint(
-          p,
-          composite.particles[(y-1)*segments.x+(x+1)],
-          stiffness));
-      }
-    }
-  }
-
-  composite.constraints.push(
-    new DistanceConstraint(
-      composite.particles[1],
-      composite.particles[7],
-      stiffness));
-
-  composite.constraints.push(
-    new DistanceConstraint(
-      composite.particles[5],
-      composite.particles[13],
-      stiffness));
-
-  composite.constraints = compact(
-    composite.constraints.map(function(x) {
-      // process all constraints to add initial distance
-      x.initialDistance = x.distance;
-      // remove any constraints touching removed vertices
-      return (remove.indexOf(x.a) > -1 || remove.indexOf(x.b) > -1) ? null : x;
-    })
-  );
-
-  composite.pin(10+7);
-
-  composite.particles = compact(
-    composite.particles.map(function(x) {
-      return (remove.indexOf(x) > -1) ? null : x;
-    })
-  );
-
-  this.composites.push(composite);
-  return composite;
+function norm(x, min, max) {
+    return (x - min) / (max - min);
 }
 
-function lerp(a, b, p) {
-  return (b-a)*p + a;
+function lerp(x, min, max) {
+    return x * (max - min) + min;
 }
 
-var running = false;
-window.onload = function() {
-  var canvas = document.getElementById("scratch");
+function map(x, minin, maxin, minout, maxout) {
+    return clamp(lerp(norm(x, minin, maxin), minout, maxout), minout, maxout);
+}
 
-  // canvas dimensions
-  var width = parseInt(canvas.style.width);
-  var height = parseInt(canvas.style.height);
+function singleSoftPin(mesh, vertexIndex, stiffness, x, y) {
+    var particle = mesh.particles[vertexIndex];
+    var pinPosition = new Vec2(particle.pos.x + x, particle.pos.y + y);
+    var pin = new Particle(pinPosition);
+    mesh.particles.push(pin);
+    mesh.constraints.push(new PinConstraint(pin, pinPosition));
+    mesh.constraints.push(new DistanceConstraint(
+        pin,
+        particle,
+        stiffness));
+}
 
-  // retina
-  var dpr = window.devicePixelRatio || 1;
-  canvas.width = width*dpr;
-  canvas.height = height*dpr;
-  canvas.getContext("2d").scale(dpr, dpr);
+function softPin(mesh, vertexIndex, stiffness, distance) {
+    singleSoftPin(mesh, vertexIndex, stiffness, 0, -distance);
+    singleSoftPin(mesh, vertexIndex, stiffness, 0, +distance);
+}
 
-  // simulation
-  var sim = new VerletJS(width, height, canvas);
-  sim.friction = .4;
-  sim.gravity = new Vec2(0, 0);
-  sim.highlightColor = "#fff";
-  
-  // entities
-  var segments = new Vec2(7, 6);
-  var min = Math.min(width,height)*0.9 / Math.min(segments.x, segments.y); // fill 90% of the canvas
-  var stiffness = .2;
-  var cloth = sim.heart(new Vec2(width/2,height/2), min * segments.x, min * segments.y, stiffness);
-  
-  cloth.drawConstraints = function(ctx, composite) {
-    for (var c in composite.constraints) {
-      if (composite.constraints[c] instanceof PinConstraint) {
-      } else {
-        composite.constraints[c].draw(ctx);
-      }
-    }
-  }
-  
-  cloth.drawParticles = function(ctx, composite) {
-    // do nothing for particles
-  }
-  
-  // animation loop
-  var loop = function() {
-    if(running) {
-      sim.frame(16);
-      sim.draw();
-      requestAnimFrame(loop);
-    }
-  };
-
-  // loop();
-
-  canvas.onmousemove = function() {}
-  canvas.onmouseenter = function() {
-    running = true;
-    loop();
-  }
-  canvas.onmouseleave = function() {
-    running = false;
-  }
-  canvas.onmousedown = function(e) {
-    sim.composites[0].constraints.forEach(function (x) {
-      if(x instanceof DistanceConstraint) {
-        x.distance *= 1.1;
-      }
+function addDistanceConstraints(mesh, x, y, particles, stiffness) {
+    var pinPosition = new Vec2(x, y);
+    var pin = new Particle(pinPosition);
+    mesh.particles.push(pin);
+    var constraints = [];
+    particles.forEach(function (particle) {
+        var constraint = new DistanceConstraint(
+            pin,
+            particle,
+            stiffness
+        );
+        mesh.constraints.push(constraint);
+        constraints.push(constraint);
     })
-  }
-  canvas.onmouseup = function(e) {
-    sim.composites[0].constraints.forEach(function (x) {
-      if(x instanceof DistanceConstraint) {
-        x.distance = x.initialDistance;
-      }
+    var constraint = new PinConstraint(pin, pinPosition);
+    mesh.constraints.push(constraint);
+    constraints.push(constraint);
+    return {
+        particles: [pin],
+        constraints: constraints
+    }
+}
+
+function removeParticlesAndConstraints(mesh, particles, constraints) {
+    particles.forEach(function (particle) {
+        mesh.particles = _.without(mesh.particles, particle);
     })
-  } 
+    constraints.forEach(function (constraint) {
+        mesh.constraints = _.without(mesh.constraints, constraint);
+    })
+}
+
+VerletJS.prototype.mesh = function (svg, stiffness) {
+    var composite = new this.Composite();
+    var vertices = getUniqueVertices(svg);
+    var edges = getUniqueEdges(svg);
+    var edgeMap = getEdgeMap(vertices, edges);
+    composite.particles = vertices.map(function (vertex) {
+        var particle = new Particle(new Vec2(vertex.x, vertex.y));
+        particle.firstPos = new Vec2(vertex.x, vertex.y);
+        particle.effects = [];
+        return particle;
+    })
+    composite.constraints = edgeMap.map(function (edge) {
+        return new DistanceConstraint(
+            composite.particles[edge[0]],
+            composite.particles[edge[1]],
+            stiffness);
+    })
+    attachPhysics(svg, vertices, composite.particles);
+    this.composites.push(composite);
+    return composite;
+}
+
+function getPoints (polygon) {
+    var pointList = polygon.node.points;
+    var points = [];
+    for(var i = 0; i < pointList.numberOfItems; i++) {
+        points.push(pointList.getItem(i));
+    }
+    return points;
+}
+
+function attachPhysics(obj, vertices, particles) {
+    var polygons = obj.selectAll('polygon');
+    polygons.forEach(function (polygon) {
+        getPoints(polygon).forEach(function (point) {
+            var vertex = {x: point.x, y: point.y};
+            var j = _.findIndex(vertices, vertex);
+            particles[j].effects.push(point);
+        })
+    })
+}
+
+function updatePhysics(mesh) {
+    mesh.particles.forEach(function (particle) {
+        if(particle.effects) {
+            particle.effects.forEach(function (effect) {
+                effect.x = particle.pos.x;
+                effect.y = particle.pos.y;
+            })
+        }
+    })
+}
+
+function getUnique(all) {
+    var unique = [];
+    all.forEach(function (obj) {
+        var matches = unique.filter(function (cur) {
+            return _.isEqual(cur, obj);
+        })
+        if(matches.length == 0) {
+            unique.push(obj);
+        }
+    })
+    return unique;
+}
+
+function getUniqueVertices(obj) {
+    var allVertices = [];
+    var polygons = obj.selectAll('polygon');
+    polygons.forEach(function (polygon) {
+        getPoints(polygon).forEach(function (point) {
+            var vertex = {x: point.x, y: point.y};
+            allVertices.push(vertex);
+        })
+    })
+    return getUnique(allVertices);
+}
+
+function getUniqueEdges(obj) {
+    var allEdges = [];
+    var polygons = obj.selectAll('polygon');
+    polygons.forEach(function (polygon) {
+        var pointObjects = [];
+        getPoints(polygon).forEach(function (point) {
+            var vertex = {x: point.x, y: point.y};
+            pointObjects.push(vertex);
+        })
+        var a = [pointObjects[0], pointObjects[1]];
+        var b = [pointObjects[1], pointObjects[2]];
+        var c = [pointObjects[2], pointObjects[0]];
+        allEdges.push(_.sortBy(_.sortBy(a, 'y'), 'x'));
+        allEdges.push(_.sortBy(_.sortBy(b, 'y'), 'x'));
+        allEdges.push(_.sortBy(_.sortBy(c, 'y'), 'x'));
+    })
+    return getUnique(allEdges);
+}
+
+function getEdgeMap(points, edges) {
+    return edges.map(function (edge) {
+        return [_.findIndex(points, edge[0]), _.findIndex(points, edge[1])];
+    })
+}
+
+window.onload = function () {
+    var canvas = document.getElementById('scratch');
+    var width = parseInt(canvas.style.width);
+    var height = parseInt(canvas.style.height);
+    var dpr = window.devicePixelRatio || 1;
+    canvas.width = width*dpr;
+    canvas.height = height*dpr;
+    canvas.getContext("2d").scale(dpr, dpr);
+
+    var sim = new VerletJS(width, height, canvas);
+    sim.gravity = new Vec2(0, 0);
+    sim.highlightColor = "#555";
+
+    sim.friction = .4;
+    var stiffness = .1;
+    var pinStiffness = .5;
+    var maxDistance = 150;
+    var power = .8;
+    var bump = 8;
+    var range = 20;
+
+    var s = Snap(document.getElementById('main'));
+    Snap.load("media/heart.svg", function (file) {
+        var svg = s.append(file);
+        var heart = svg.select('g');
+        mesh = sim.mesh(heart, stiffness);
+        softPin(mesh, 2, pinStiffness, 10);
+        softPin(mesh, 26, pinStiffness, 10);
+
+        var loop = function () {
+            sim.frame(16);
+            if(canvas.style.display != 'none') {
+                sim.draw();
+            }
+            updatePhysics(mesh);
+            requestAnimFrame(loop);
+        };
+
+        function random(min, max) {
+            return min + (max - min) * Math.random();
+        }
+
+        var forces;
+        function heartbeatOn (x, y) {
+            var x = 175 + random(-range, +range);
+            var y = 150 + random(-range, +range);
+            forces = addDistanceConstraints(mesh, x, y, mesh.particles, .1);
+            forces.constraints.forEach(function (constraint) {
+                constraint.distance = bump + Math.pow(constraint.distance / maxDistance, power) * maxDistance;
+            })
+        }
+
+        function heartbeatOff (e) {
+            if(forces) {
+                removeParticlesAndConstraints(mesh, forces.particles, forces.constraints);
+            }
+        }
+
+        var heartbeat = function () {
+            var heartStyle = map(heartrate, 60, 120, 0, 1);
+
+            sim.friction = lerp(heartStyle, .4, .8);
+            stiffness = lerp(heartStyle, .1, .5);
+            pinStiffness = lerp(heartStyle, .5, .8);
+            maxDistance = lerp(heartStyle, 150, 120);
+            power = lerp(heartStyle, .8, .7);
+            bump = lerp(heartStyle, 8, 15);
+            range = lerp(heartStyle, 20, 5);
+
+            var heartTimeout = 60. * 1000. / heartrate;
+            setTimeout(function() { heartbeatOn() }, 0);
+            setTimeout(function() { heartbeatOff() }, lerp(heartStyle, 100, 50));
+            setTimeout(function() { heartbeatOn() }, lerp(heartStyle, 200, 100));
+            setTimeout(function() { heartbeatOff() }, lerp(heartStyle, 350, 100));
+            setTimeout(function() { heartbeat() }, heartTimeout);
+        }
+
+        loop();
+        heartbeat();
+    });
 };

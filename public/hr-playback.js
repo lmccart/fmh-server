@@ -11,10 +11,9 @@ $(document).ready(function() {
     total_time = data[data.length-1].timestamp - start_time;
 
     updateHR();
+    setInterval(updateHR, 100);
   });
 
-
-  setInterval(updateHR, 100);
 
   function updateHR() {
 

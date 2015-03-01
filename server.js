@@ -38,9 +38,6 @@ io.on('connection', function (socket) {
 app.get('/update_hr', function (req, res) {
   console.log(req.query);
   hr = parseInt(req.query.hr, 10);
-  console.log(hr);
-  io.emit('hr', hr);
-
   var r = { hr: hr, timestamp: new Date().getTime() };
 
   stored_hr.insert(r, function(err, result) {
@@ -51,6 +48,10 @@ app.get('/update_hr', function (req, res) {
   res.send('thanks');
 });
 
+
+app.get('/get_hr', function (req, res) {
+  res.json({hr: hr});
+});
 
 
 

@@ -6,14 +6,40 @@
   <script type="text/javascript" src="lib/verlet-1.0.0.min.js"></script>
   <script data-main="app" src="lib/jquery.js"></script>
   <script>
-  setInterval(updateHR, 1000);
+  $(document).ready(function() {
+    var data;
+    var ind = 0;
+    var start_time;
+    var total_time;
 
-  function updateHR() {
-    $.getJSON('/get_hr', function(data) {
-      $('#hr').html(data.hr);
+    $.getJSON('hr.json', function(d, error) {
+      data = d;
+
+      start_time = data[0].timestamp;
+      total_time = data[data.length-1].timestamp - start_time;
+
+      updateHR();
     });
-  }
-  
+
+
+    setInterval(updateHR, 1000);
+
+    function updateHR() {
+
+      var offset = new Date().getTime()%total_time;
+
+      for (var i=ind; i<data.length; i++) {
+        if (data[i].timestamp < offset + start_time) {
+          ind = i;
+          i++;
+        } else {
+          break;
+        }
+      }
+      
+      $('#hr').html(data[ind].hr);
+    }
+  });
   </script>
   <style>
     body, html {

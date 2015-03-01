@@ -4,7 +4,6 @@ var app = express();
 app.set('port', process.env.PORT || 3000);
 
 var server = require('http').Server(app);
-var io = require('socket.io')(server);
 server.listen(app.get('port'));
 
 var MongoClient = require('mongodb').MongoClient;
@@ -22,11 +21,6 @@ MongoClient.connect(process.env.MONGOLAB_URI, function(err, db) {
 
 var hr = 0;
 
-
-io.on('connection', function (socket) {
-  console.log('socket connected');
-  io.emit('hr', 100);
-});
 
 // Add headers
 app.use(function (req, res, next) {

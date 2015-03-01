@@ -24,7 +24,7 @@ $(document).ready(function() {
     var mins = past_date.getMinutes().toString();
     if (mins.length == 1) mins = '0'+mins;
     var secs = past_date.getSeconds().toString();
-    if (secs.length == 1) mins = '0'+mins;
+    if (secs.length == 1) secs = '0'+secs;
     
     $('#clock').html(past_date.getHours()+':'+mins+':'+secs);
 

@@ -28,14 +28,18 @@
 
       var offset = new Date().getTime()%total_time;
 
+      if (data[ind].timestamp > offset + start_time) {
+        ind = 0;
+      }
+
       for (var i=ind; i<data.length; i++) {
         if (data[i].timestamp < offset + start_time) {
           ind = i;
-          i++;
         } else {
           break;
         }
       }
+      console.log(offset + start_time, ind);
       
       $('#hr').html(data[ind].hr);
     }

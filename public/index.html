@@ -6,14 +6,14 @@
   <script type="text/javascript" src="lib/verlet-1.0.0.min.js"></script>
   <script data-main="app" src="lib/jquery.js"></script>
   <script>
-  setInterval(updateHR, 1000);
+  setInterval(updateHR, 100);
 
   function updateHR() {
     $.getJSON('/get_hr', function(data) {
       $('#hr').html(data.hr);
     });
   }
-  
+
   </script>
   <style>
     body, html {

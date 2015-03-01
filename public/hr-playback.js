@@ -21,10 +21,9 @@ $(document).ready(function() {
     var offset = new Date().getTime()%total_time;
 
     var past_date = new Date(offset + start_time);
-    console.log(past_date)
-    var mins = past_date.getMinutes();
+    var mins = past_date.getMinutes().toString();
     if (mins.length == 1) mins = '0'+mins;
-    var secs = past_date.getSeconds();
+    var secs = past_date.getSeconds().toString();
     if (secs.length == 1) mins = '0'+mins;
     
     $('#clock').html(past_date.getHours()+':'+mins+':'+secs);

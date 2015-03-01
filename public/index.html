@@ -5,15 +5,12 @@
   <meta charset='UTF-8' />
   <script type='text/javascript' src='lib/verlet-1.0.0.min.js'></script>
   <script data-main='app' src='lib/jquery.js'></script>
-  <script type='text/javascript' src='hr-live.js'></script>
+  <script type='text/javascript' src='hr-playback.js'></script>
+  <!--<script type='text/javascript' src='hr-live.js'></script>-->
   <script type='text/javascript'>
   $(document).ready(function() {
     $('#info_button').click(function() {
       $('#info').fadeIn();
-      return false;
-    });
-
-    $('#info').click(function() {
       return false;
     });
 
@@ -41,7 +38,7 @@
       font-size: 20px;
       position: absolute;
       bottom: 25px;
-      right: 20px;
+      right: 18px;
       margin: 0;
       padding: 0 10px;
       cursor: pointer;
@@ -90,12 +87,22 @@
       color: black;
       cursor: pointer;
     }
+
+    #clock {
+      font-size: 18px;
+      position: absolute;
+      bottom: 25px;
+      left: 20px;
+      margin: 0;
+      padding: 0 10px;
+    }
   </style>
 </head>
 <body>
 <canvas id='scratch' style='width: 800px; height: 500px;'></canvas>
 <script type='text/javascript' src='lib/heart.js'></script>
 <p>#FOLLOWMYHEART: <span id='hr'>0</span></p>
+<p id='clock'></p>
 <p id='info_button'>i</p>
 <div id='info_container'>
 <div id='info'>
@@ -108,7 +115,7 @@
     <p style='margin-top:20px'>commissioned by<br>
     <a href='http://dazeddigital.com'><img width='75px' style='margin-top:5px' src='imgs/dazed.png'/></a></p>
 
-    <p style='margin-top:-10px'>site developed in conjunction with <a href='http://pplkpr.com'><img width='50px' style='margin-bottom:-20px;margin-right:-20px' src='imgs/pplkpr.png'/></a></p>
+    <p style='margin-top:-10px'>site developed in conjunction with <a href='http://pplkpr.com'><img width='50px' style='margin-bottom:-17px;margin-right:-20px' src='imgs/pplkpr.png'/></a></p>
     </div>
   </div> 
 </div>

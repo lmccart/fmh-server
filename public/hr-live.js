@@ -1,3 +1,7 @@
+$(document).ready(function() {
+
+  $('#clock').html('LIVE');
+
   setInterval(updateHR, 1000);
 
   function updateHR() {
@@ -6,3 +10,4 @@
       //console.log(data)
     });
   }
+});

@@ -25,7 +25,8 @@ $(document).ready(function() {
     var secs = past_date.getSeconds().toString();
     if (secs.length == 1) secs = '0'+secs;
     
-    $('#clock').html(past_date.getHours()+':'+mins+':'+secs);
+    var ampm = past_date.getHours() < 12 ? ' AM' : ' PM';
+    $('#clock').html('March '+past_date.getDate()+' • '+past_date.getHours()%12+':'+mins+':'+secs+ampm);
 
     if (data[ind].timestamp > offset + start_time) {
       ind = 0;
@@ -38,6 +39,8 @@ $(document).ready(function() {
         break;
       }
     }
+
+    heartrate = data[i].hr;
     // console.log(offset + start_time, ind);
     
     // $('#hr').html(data[ind].hr);

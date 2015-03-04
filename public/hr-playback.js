@@ -26,7 +26,7 @@ $(document).ready(function() {
     if (secs.length == 1) secs = '0'+secs;
     
     var ampm = past_date.getHours() < 12 ? ' AM' : ' PM';
-    $('#clock').html('March '+past_date.getDate()+' • '+past_date.getHours()%12+':'+mins+':'+secs+ampm);
+    $('#clock').html(past_date.getDate()+' March 2015 • '+past_date.getHours()%12+':'+mins+':'+secs+ampm);
 
     if (data[ind].timestamp > offset + start_time) {
       ind = 0;

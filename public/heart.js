@@ -191,7 +191,7 @@ window.addEventListener('load', function () {
     var bump = 8;
     var range = 20;
 
-    var heartbeatSound = new Howl({ urls: ['sound/heartbeat.mp3', 'sound/heartbeat.ogg'] });
+    var heartbeatSound = new Howl({ urls: ['sound/heartbeatF2.mp3', 'sound/heartbeatF2.ogg'] });
     var s = Snap(document.getElementById('heart'));
     Snap.load("imgs/heart.svg", function (file) {
         var svg = s.append(file);

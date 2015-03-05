@@ -182,14 +182,16 @@ window.addEventListener('load', function () {
     var sim = new VerletJS(width, height, canvas);
     sim.gravity = new Vec2(0, 0);
     sim.highlightColor = "#555";
+    var pinDistance = 25;
 
+    // these all get overwritten by heartbeat()
     sim.friction = .4;
     var stiffness = .1;
     var pinStiffness = .5;
-    var maxDistance = 150;
-    var power = .8;
-    var bump = 8;
-    var range = 20;
+    var maxDistance = width / 2.;
+    var power = .6;
+    var bumpDistance = 20;
+    var bumpRange = 25;
 
     var heartbeatSound = new Howl({ urls: ['sound/heartbeat.mp3', 'sound/heartbeat.ogg'] });
     var s = Snap(document.getElementById('heart'));
@@ -197,10 +199,10 @@ window.addEventListener('load', function () {
         var svg = s.append(file);
         var heart = svg.select('g');
         mesh = sim.mesh(heart, stiffness);
-        softPin(mesh, 2, pinStiffness, 20);
-        softPin(mesh, 5, pinStiffness, 20);
-        softPin(mesh, 8, pinStiffness, 20);
-        softPin(mesh, 26, pinStiffness, 20);
+        softPin(mesh, 2, pinStiffness, pinDistance);
+        softPin(mesh, 5, pinStiffness, pinDistance);
+        softPin(mesh, 8, pinStiffness, pinDistance);
+        softPin(mesh, 26, pinStiffness, pinDistance);
 
         var loop = function () {
             sim.frame(16);
@@ -217,11 +219,11 @@ window.addEventListener('load', function () {
 
         var forces;
         function heartbeatOn (x, y) {
-            var x = 175 + random(-range, +range);
-            var y = 150 + random(-range, +range);
+            var x = (width / 2.) + random(-bumpRange, +bumpRange);
+            var y = (height / 2.) + random(-bumpRange, +bumpRange);
             forces = addDistanceConstraints(mesh, x, y, mesh.particles, .1);
             forces.constraints.forEach(function (constraint) {
-                constraint.distance = bump + Math.pow(constraint.distance / maxDistance, power) * maxDistance;
+                constraint.distance = bumpDistance + Math.pow(constraint.distance / maxDistance, power) * maxDistance;
             })
         }
 
@@ -237,10 +239,10 @@ window.addEventListener('load', function () {
             sim.friction = lerp(heartStyle, .4, .8);
             stiffness = lerp(heartStyle, .1, .5);
             pinStiffness = lerp(heartStyle, .5, .8);
-            maxDistance = lerp(heartStyle, 150, 120);
+            maxDistance = lerp(heartStyle, 190, 150);
             power = lerp(heartStyle, .8, .7);
-            bump = lerp(heartStyle, 8, 15);
-            range = lerp(heartStyle, 20, 5);
+            bumpDistance = lerp(heartStyle, 10, 20);
+            bumpRange = lerp(heartStyle, 25, 8);
 
             var heartTimeout = 60. * 1000. / heartrate;
             setTimeout(function() { heartbeatOn() }, 0);

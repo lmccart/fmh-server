@@ -191,14 +191,16 @@ window.addEventListener('load', function () {
     var bump = 8;
     var range = 20;
 
-    var heartbeatSound = new Howl({ urls: ['sound/heartbeatF2.mp3', 'sound/heartbeatF2.ogg'] });
+    var heartbeatSound = new Howl({ urls: ['sound/heartbeat.mp3', 'sound/heartbeat.ogg'] });
     var s = Snap(document.getElementById('heart'));
     Snap.load("imgs/heart.svg", function (file) {
         var svg = s.append(file);
         var heart = svg.select('g');
         mesh = sim.mesh(heart, stiffness);
-        softPin(mesh, 2, pinStiffness, 10);
-        softPin(mesh, 26, pinStiffness, 10);
+        softPin(mesh, 2, pinStiffness, 20);
+        softPin(mesh, 5, pinStiffness, 20);
+        softPin(mesh, 8, pinStiffness, 20);
+        softPin(mesh, 26, pinStiffness, 20);
 
         var loop = function () {
             sim.frame(16);

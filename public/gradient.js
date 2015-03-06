@@ -71,7 +71,7 @@ function updateGradient() {
 function updateColor() {
 
   hue+=hue_step;
-  if (hue > 15 || hue < -5) {
+  if (hue >= 15 || hue <= -5) {
     hue_step *= -1;
   }
 

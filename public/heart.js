@@ -217,20 +217,22 @@ window.addEventListener('load', function () {
             return min + (max - min) * Math.random();
         }
 
-        var forces;
+        var toRemove = [];
         function heartbeatOn (x, y) {
             var x = (width / 2.) + random(-bumpRange, +bumpRange);
             var y = (height / 2.) + random(-bumpRange, +bumpRange);
-            forces = addDistanceConstraints(mesh, x, y, mesh.particles, .1);
-            forces.constraints.forEach(function (constraint) {
+            var force = addDistanceConstraints(mesh, x, y, mesh.particles, .1);
+            force.constraints.forEach(function (constraint) {
                 constraint.distance = bumpDistance + Math.pow(constraint.distance / maxDistance, power) * maxDistance;
             })
+            toRemove.push(force);
         }
 
         function heartbeatOff (e) {
-            if(forces) {
-                removeParticlesAndConstraints(mesh, forces.particles, forces.constraints);
-            }
+            toRemove.forEach(function (force) {
+                removeParticlesAndConstraints(mesh, force.particles, force.constraints);
+            })
+            toRemove = [];
         }
 
         var heartbeat = function () {

@@ -19,7 +19,7 @@ MongoClient.connect(process.env.MONGOLAB_URI, function(err, db) {
   console.log("Connected correctly to db");
 });
 
-var hr = 0;
+var hr = 60;
 
 
 // Add headers
@@ -43,14 +43,17 @@ app.use(function (req, res, next) {
 });
 
 app.get('/update_hr', function (req, res) {
-  console.log(req.query);
-  hr = parseInt(req.query.hr, 10);
-  var r = { hr: hr, timestamp: new Date().getTime() };
+  var new_hr = parseInt(req.query.hr, 10);
 
-  stored_hr.insert(r, function(err, result) {
-    assert.equal(err, null);
-    console.log("inserted");
-  });
+  if (new_hr !== 0) {
+    hr = new_hr;
+    var r = { hr: hr, timestamp: new Date().getTime() };
+
+    stored_hr.insert(r, function(err, result) {
+      assert.equal(err, null);
+      console.log("inserted");
+    });
+  }
 
   res.send('thanks');
 });

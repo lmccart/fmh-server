@@ -26,7 +26,7 @@ var hr = 0;
 app.use(function (req, res, next) {
 
     // Website you wish to allow to connect
-    res.setHeader('Access-Control-Allow-Origin', 'http://followmyheart.herokuapp.com/');
+    res.setHeader('Access-Control-Allow-Origin', 'https://followmyheart.herokuapp.com/');
 
     // Request methods you wish to allow
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');

@@ -15,7 +15,7 @@ $(document).ready(function() {
     $('#clock').html('LIVE • '+date.getHours()%12+':'+mins+':'+secs+ampm);
 
 
-    $.getJSON('https://followmyheart.herokuapp.com/get_hr', function(data) {
+    $.getJSON('/get_hr', function(data) {
       // $('#hr').html(data.hr);
       //console.log(data)
       heartrate = data.hr;

@@ -1,8 +1,11 @@
+
 <!DOCTYPE html>
 <html lang='en'>
 <head>
-  <title>#FOLLOWMYHEART</title>
+  <title>#FOLLOWMYHEART | LaBeouf, Rönkkö & Turner</title>
   <meta charset='UTF-8' />
+  <meta property="og:title" content="#FOLLOWMYHEART | LaBeouf, Rönkkö & Turner"/>
+  <meta property="og:description" content="Transmitting the beat of my heart in real time from 13–19 March 2015, live from SXSW in Austin, Texas."/>
   <link rel='shortcut icon' href='/favicon.ico'>
   <script data-main='app' src='lib/jquery.js'></script>
   <script type='text/javascript' src='lib/verlet-1.0.0.min.js'></script>
@@ -33,7 +36,7 @@
     $('#heart').css('margin-top', htop);
 
     $('#hashtag').click(function() {
-      window.open('https://twitter.com/intent/tweet?text=%23FOLLOWMYHEART ❤ '+heartrate+' BPM follow the beat of @thecampaignbook\'s heart live at FOLLOW-MY-HEART.NET @DazedMagazine @sxsw', '_blank');
+      window.open('https://twitter.com/intent/tweet?text=%23FOLLOWMYHEART ❤ '+heartrate+' BPM // follow the beat of @thecampaignbook\'s heart live at FOLLOW-MY-HEART.NET @DazedMagazine @sxsw', '_blank');
     });
   });
   </script>
@@ -43,7 +46,7 @@
       height: 100%;
       margin: 0;
       padding: 0;
-/*      background: linear-gradient(#ff73d6, #fbdeff);*/
+    background: linear-gradient(#ff73d6, #fbdeff);
       font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
       color: white;
       overflow: hidden;
@@ -61,18 +64,18 @@
 
     #info_container {
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
+      top: 50%;
+    margin-top:-205px;
+      left: 50%;
+    margin-left:-225px;
     }
 
     #info {
-      display: none;
+    display: none;
       font-size: 14px;
       text-align: left;
-      width: 380px;
-      height: 315px;
-      margin: 200px auto 0 auto;
+      width: 450px;
+      height: 355px;
       position: relative;
       line-height: 20px;
       background: white;
@@ -82,9 +85,10 @@
       position: absolute;
       top: 0;
       left: 0;
-      margin: 30px 40px 30px 50px;
+      margin: 50px 70px 30px 50px;
       color: black;
     }
+  
 
     #info .x {
       position: absolute;
@@ -128,18 +132,16 @@
 <!--   <div class='bg'></div> -->
   <div class='x'>x</div>
   <div class='credits'>
-    <p><b>#FOLLOWMYHEART</b><br>
-    by <a target=_blank href='http://thecampaignbook.com/' >LaBeouf, R&ouml;nkk&ouml; &amp; Turner</a>, 2015</p>
+    <p style='font-size: 19px; margin-top:0px; margin-bottom:0px;'><b>#FOLLOWMYHEART</b></p>
+    <p style='font-size: 15px; margin-top:7px; margin-bottom:20px;'>by <a target=_blank href='http://thecampaignbook.com/' >LaBeouf, R&ouml;nkk&ouml; &amp; Turner</a>, 2015</p>
 
-    <p>Transmitting the beat of my heart in real time from 13–19 March 2015, live from SXSW in Austin, Texas.</p>
+    <p>Transmitting the beat of my heart in real time from 13–19 March 2015, live from <a target=_blank href='http://sxsw.com'>SXSW</a> in Austin, Texas.</p>
 
-    <p style='margin-top:20px'>commissioned by<br>
-    <a target=_blank href='http://dazeddigital.com'><img width='75px' style='margin-top:5px' src='imgs/dazed.png'/></a></p>
+    <p style='margin-top:40px'>commissioned by<br>
+    <a target=_blank href='http://dazeddigital.com'><img width='110px' style='margin-top:5px' src='imgs/dazed.png'/></a></p>
 
-    <p style='margin-top:-10px'>site developed in conjunction with <a target=_blank href='http://pplkpr.com'><img width='52px' style='margin-bottom:-19px;margin-right:-20px' src='imgs/pplkpr.png'/></a></p>
+    <p style='margin-top:-10px'>site developed in conjunction with <a target=_blank href='http://pplkpr.com'><img width='57px' style='margin-bottom:-19px;margin-right:-20px' src='imgs/pplkpr.png'/></a></p>
     </div>
   </div> 
-</div>
-
 </body>
 </html>

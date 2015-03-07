@@ -1,14 +1,10 @@
 
 var colors = new Array(
-  [255, 115, 214],
-  [255, 115, 214],
-  [255, 115, 214],
-  // [60,255,60],
-  // [255,35,98],
-  // [45,175,230],
-  // [255,0,255],
   [251,222,255],
+  [255, 105, 211],
+  [255, 105, 211],
   [251,222,255],
+  [255, 143, 222],
   [251,222,255]);
 
 var hue = 0;
@@ -81,4 +77,4 @@ function updateColor() {
 }
 
 setInterval(updateColor, 500);
-setInterval(updateGradient,10);
+setInterval(updateGradient,12);

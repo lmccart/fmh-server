@@ -195,7 +195,7 @@ window.addEventListener('load', function () {
 
     var heartbeatSound = new Howl({ urls: ['sound/heartbeat.mp3', 'sound/heartbeat.ogg'] });
     var s = Snap(document.getElementById('heart'));
-    Snap.load("imgs/heart.svg", function (file) {
+    Snap.load("imgs/heart2.svg", function (file) {
         var svg = s.append(file);
         var heart = svg.select('g');
         mesh = sim.mesh(heart, stiffness);

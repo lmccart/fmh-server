@@ -23,7 +23,7 @@ $(document).ready(function() {
 
     var m = moment(past_date).tz('America/Chicago');
 
-    $('#clock').html(past_date.getDate()+' March 2015 • '+m.tz('America/Chicago').format('hh:mm:ss A'));
+    $('#clock').html(past_date.getDate()+' March 2015 • '+m.tz('America/Chicago').format('h:mm:ss A'));
 
     if (data[ind].timestamp > offset + start_time) {
       ind = 0;

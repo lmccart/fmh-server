@@ -7,7 +7,7 @@ $(document).ready(function() {
 
     var date = new Date();
     var m = moment(date)
-    var str = m.tz('America/Chicago').format('hh:mm:ss A'); 
+    var str = m.tz('America/Chicago').format('h:mm:ss A'); 
     $('#clock').html('LIVE • '+str);
 
     $.getJSON('https://followmyheart.herokuapp.com/get_hr', function(data) {

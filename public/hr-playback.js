@@ -20,13 +20,10 @@ $(document).ready(function() {
     var offset = new Date().getTime()%total_time;
 
     var past_date = new Date(offset + start_time);
-    var mins = past_date.getMinutes().toString();
-    if (mins.length == 1) mins = '0'+mins;
-    var secs = past_date.getSeconds().toString();
-    if (secs.length == 1) secs = '0'+secs;
-    
-    var ampm = past_date.getHours() < 12 ? ' AM' : ' PM';
-    $('#clock').html(past_date.getDate()+' March 2015 • '+past_date.getHours()%12+':'+mins+':'+secs+ampm);
+
+    var m = moment(past_date).tz('America/Chicago');
+
+    $('#clock').html(past_date.getDate()+' March 2015 • '+m.tz('America/Chicago').format('hh:mm:ss A'));
 
     if (data[ind].timestamp > offset + start_time) {
       ind = 0;

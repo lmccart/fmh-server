@@ -43,19 +43,24 @@ app.use(function (req, res, next) {
 });
 
 app.get('/update_hr', function (req, res) {
-  var new_hr = parseInt(req.query.hr, 10);
 
-  if (new_hr !== 0) {
-    hr = new_hr;
-    var r = { hr: hr, timestamp: new Date().getTime() };
+  if (process.env.SERVER_PASS === req.query.pass) {
+    var new_hr = parseInt(req.query.hr, 10);
 
-    stored_hr.insert(r, function(err, result) {
-      assert.equal(err, null);
-      console.log("inserted");
-    });
+    if (new_hr !== 0) {
+      hr = new_hr;
+      var r = { hr: hr, timestamp: new Date().getTime() };
+
+      stored_hr.insert(r, function(err, result) {
+        assert.equal(err, null);
+        console.log("inserted");
+      });
+    }
+
+    res.send('thanks');
+  } else {
+    res.send('permission denied: thanks for trying');
   }
-
-  res.send('thanks');
 });
 
 

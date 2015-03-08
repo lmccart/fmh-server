@@ -1,6 +1,6 @@
 $(document).ready(function() {
 
-  var live = false;
+  var live = true;
   
   if (live) {
     setInterval(updateLiveHR, 1000);

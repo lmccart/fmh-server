@@ -15,7 +15,7 @@ $(document).ready(function() {
       total_time = data[data.length-1].timestamp - start_time;
 
       updatePlaybackHR();
-      setInterval(updateHR, 1000);
+      setInterval(updatePlaybackHR, 1000);
     });
   }
 

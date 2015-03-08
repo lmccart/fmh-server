@@ -1,21 +1,25 @@
 $(document).ready(function() {
-  var data;
-  var ind = 0;
-  var start_time;
-  var total_time;
 
-  $.getJSON('hr.json', function(d, error) {
-    data = d;
+  if (live) {
+    setInterval(updateLiveHR, 1000);
+  } else {
+    var data;
+    var ind = 0;
+    var start_time;
+    var total_time;
 
-    start_time = data[0].timestamp;
-    total_time = data[data.length-1].timestamp - start_time;
+    $.getJSON('hr.json', function(d, error) {
+      data = d;
 
-    updateHR();
-    setInterval(updateHR, 100);
-  });
+      start_time = data[0].timestamp;
+      total_time = data[data.length-1].timestamp - start_time;
 
+      updatePlaybackHR();
+      setInterval(updateHR, 1000);
+    });
+  }
 
-  function updateHR() {
+  function updatePlaybackHR() {
 
     var offset = new Date().getTime()%total_time;
 
@@ -41,5 +45,19 @@ $(document).ready(function() {
     // console.log(offset + start_time, ind);
     
     // $('#hr').html(data[ind].hr);
+  }
+
+  function updateLiveHR() {
+
+    var date = new Date();
+    var m = moment(date)
+    var str = m.tz('America/Chicago').format('h:mm:ss A'); 
+    $('#clock').html('LIVE • '+str);
+
+    $.getJSON('https://followmyheart.herokuapp.com/get_hr', function(data) {
+      // $('#hr').html(data.hr);
+      //console.log(data)
+      heartrate = data.hr;
+    });
   }
 });

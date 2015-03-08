@@ -1,5 +1,7 @@
 $(document).ready(function() {
 
+  var live = false;
+  
   if (live) {
     setInterval(updateLiveHR, 1000);
   } else {

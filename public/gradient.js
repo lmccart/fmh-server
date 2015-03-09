@@ -1,10 +1,10 @@
 
 var colors = new Array(
   [251,222,255],
-  [255, 105, 211],
-  [255, 105, 211],
+  [255,100,210],
+  [255,100,210],
   [251,222,255],
-  [255, 143, 222],
+  [255,143,222],
   [251,222,255]);
 
 var hue = 0;
@@ -67,7 +67,7 @@ function updateGradient() {
 function updateColor() {
 
   hue+=hue_step;
-  if (hue >= 15 || hue <= -5) {
+  if (hue >= 12 || hue <= -5) {
     hue_step *= -1;
   }
 

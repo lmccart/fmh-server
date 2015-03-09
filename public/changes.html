@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+  <title>#FOLLOWMYHEART | LaBeouf, Rönkkö & Turner</title>
+  <meta charset='UTF-8' />
+  <meta property="og:title" content="#FOLLOWMYHEART | LaBeouf, Rönkkö & Turner"/>
+  <meta property="og:description" content="Transmitting the beat of my heart in real time from 13–19 March 2015, live from SXSW in Austin, Texas."/>
+  <meta property="og:image" content="http://followmyheart.herokuapp.com/imgs/followmyheart.png" />
+  <link rel='shortcut icon' href='/favicon.ico'>
+  <script data-main='app' src='lib/jquery.js'></script>
+  <script type='text/javascript' src='lib/verlet-1.0.0.min.js'></script>
+  <script type='text/javascript' src='lib/moment.js'></script>
+  <script type='text/javascript' src='lib/moment-timezone.js'></script>
+  <script type='text/javascript' src='lib/snap.svg-min.js'></script>
+  <script type='text/javascript' src='lib/underscore-min.js'></script>
+  <script type='text/javascript' src='lib/howler.min.js'></script>
+  <script type='text/javascript' src='hr.js'></script>
+  <script type='text/javascript' src='heart.js'></script>
+  <script type='text/javascript' src='gradient.js'></script>
+  <script type='text/javascript'>
+
+  moment.tz.add('America/Chicago|CST CDT EST CWT CPT|60 50 50 50 50|01010101010101010101010101010101010102010101010103401010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010|-261s0 1nX0 11B0 1nX0 1wp0 TX0 WN0 1qL0 1cN0 WL0 1qN0 11z0 1o10 11z0 1o10 11z0 1o10 11z0 1o10 11z0 1qN0 11z0 1o10 11z0 1o10 11z0 1o10 11z0 1o10 11z0 1qN0 WL0 1qN0 11z0 1o10 11z0 11B0 1Hz0 14p0 11z0 1o10 11z0 1qN0 WL0 1qN0 11z0 1o10 11z0 RB0 8x30 iw0 1o10 11z0 1o10 11z0 1o10 11z0 1o10 11z0 1qN0 WL0 1qN0 11z0 1o10 11z0 1o10 11z0 1o10 11z0 1o10 1fz0 1cN0 1cL0 1cN0 1cL0 1cN0 1cL0 1cN0 1cL0 1cN0 1fz0 1cN0 1cL0 1cN0 1cL0 1cN0 1cL0 1cN0 1cL0 1cN0 1fz0 1a10 1fz0 1cN0 1cL0 1cN0 1cL0 1cN0 1cL0 1cN0 1cL0 1cN0 1fz0 1cN0 1cL0 1cN0 1cL0 s10 1Vz0 LB0 1BX0 1cN0 1fz0 1a10 1fz0 1cN0 1cL0 1cN0 1cL0 1cN0 1cL0 1cN0 1cL0 1cN0 1fz0 1a10 1fz0 1cN0 1cL0 1cN0 1cL0 1cN0 1cL0 14p0 1lb0 14p0 1nX0 11B0 1nX0 11B0 1nX0 14p0 1lb0 14p0 1lb0 14p0 1nX0 11B0 1nX0 11B0 1nX0 14p0 1lb0 14p0 1lb0 14p0 1lb0 14p0 1nX0 11B0 1nX0 11B0 1nX0 14p0 1lb0 14p0 1lb0 14p0 1nX0 11B0 1nX0 11B0 1nX0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0');
+
+  var fadeTime = 200;
+
+  $(document).ready(function() {
+    $('#info_button').click(function() {
+      $('#info').fadeIn(fadeTime);
+      return false;
+    });
+
+    $('body').click(function() { $('#info').fadeOut(fadeTime); });
+
+    $('#info .x').click(function() { $('#info').fadeOut(fadeTime); });
+    
+    $(document).keyup(function(e) {
+      if (e.keyCode == 27) { $('#info').fadeOut(fadeTime); };
+    });
+
+    var htop = (window.innerHeight - $('#heart').height()) / 2 - 25;
+    $('#heart').css('margin-top', htop);
+
+    $('#hashtag').click(function() {
+      window.open('https://twitter.com/intent/tweet?text=%23FOLLOWMYHEART ❤ '+heartrate+' BPM // follow the beat of @thecampaignbook\'s heart live at FOLLOW-MY-HEART.NET @DazedMagazine @sxsw', '_blank');
+    });
+  });
+  </script>
+  <style>
+    body, html {
+      text-align: center;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    background: linear-gradient(#ff73d6, #fbdeff);
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      color: white;
+      overflow: hidden;
+    }
+    #info_button {
+      font-size: 18px;
+      position: absolute;
+      top: 18px;
+      right: 30px;
+      text-align: right;
+      margin: 0;
+      padding: 0;
+      cursor: pointer;
+    }
+
+    #info_container {
+      position: absolute;
+      top: 50%;
+    margin-top:-205px;
+      left: 50%;
+    margin-left:-225px;
+    }
+
+    #info {
+    display: none;
+      font-size: 14px;
+      text-align: left;
+      width: 450px;
+      height: 355px;
+      position: relative;
+      line-height: 20px;
+      background: white;
+    }
+
+    #info .credits {
+      position: absolute;
+      top: 0;
+      left: 0;
+      margin: 50px 70px 30px 50px;
+      color: black;
+    }
+  
+
+    #info .x {
+      position: absolute;
+      top: 10px;
+      right: 18px;
+      color: black;
+      cursor: pointer;
+    }
+
+    #clock {
+      font-size: 18px;
+      position: absolute;
+      top: 23px;
+      left: 32px;
+      margin: 0;
+      padding: 0;
+      font-weight: bold;
+    }
+
+    a {
+      color: black;
+      text-decoration: none;
+    }
+
+    #hashtag {
+      cursor: pointer;
+      margin-top: 55px;
+      font-size: 72px;
+    }
+
+  </style>
+</head>
+<body>
+<svg id='heart' style='width: 425px; height: 350px;'></svg>
+<canvas id='debug' style='width: 425px; height: 350px; display: none'></canvas>
+<p id='hashtag'><b>#FOLLOWMYHEART</b></p>
+<p id='clock'></p>
+<img id='info_button' src='imgs/info.png'/>
+<div id='info_container'>
+<div id='info'>
+<!--   <div class='bg'></div> -->
+  <div class='x'>x</div>
+  <div class='credits'>
+    <p style='font-size: 19px; margin-top:0px; margin-bottom:0px;'><b>#FOLLOWMYHEART</b></p>
+    <p style='font-size: 15px; margin-top:7px; margin-bottom:20px;'>by <a target=_blank href='http://thecampaignbook.com/' >LaBeouf, R&ouml;nkk&ouml; &amp; Turner</a>, 2015</p>
+
+    <p>Transmitting the beat of my heart in real time from 13–19 March 2015, live from <a target=_blank href='http://sxsw.com'>SXSW</a> in Austin, Texas.</p>
+
+    <p style='margin-top:40px'>commissioned by<br>
+    <a target=_blank href='http://dazeddigital.com'><img width='110px' style='margin-top:5px' src='imgs/dazed.png'/></a></p>
+
+    <p style='margin-top:-10px'>site developed in conjunction with <a target=_blank href='http://pplkpr.com'><img width='57px' style='margin-bottom:-19px;margin-right:-20px' src='imgs/pplkpr.png'/></a></p>
+    </div>
+  </div> 
+</body>
+</html>

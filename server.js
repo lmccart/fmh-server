@@ -23,7 +23,7 @@ MongoClient.connect(process.env.MONGOLAB_URI, function(err, db) {
   console.log("Connected correctly to db");
 
 
-  stored_hr.find({}).sort({'timestamp': 1}).toArray(function(err, arr) {
+  stored_hr.find({}).sort({'timestamp': 1}).limit(400000).toArray(function(err, arr) {
     playback_hr = arr;
     console.log('loaded playback');
 
@@ -95,9 +95,11 @@ function updatePlaybackHR() {
 
   var offset = (Date.now()-end_time)%total_time;
 
-  var past_date = new Date(offset + start_time);
 
-  if (playback_hr[ind].timestamp > offset + start_time) {
+
+  console.log(playback_hr[ind].timestamp, offset + start_time, offset + start_time - playback_hr[ind].timestamp, offset + start_time - playback_hr[ind+1].timestamp);
+
+  if (offset + start_time > playback_hr[ind].timestamp && ind == playback_hr.length - 1) {
     ind = 0;
   }
 
@@ -108,6 +110,8 @@ function updatePlaybackHR() {
       break;
     }
   }
+
+  console.log(ind);
 
   hr = playback_hr[ind].hr;
   ts = playback_hr[ind].timestamp;

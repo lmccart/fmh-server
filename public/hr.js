@@ -1,7 +1,6 @@
 $(document).ready(function() {
 
   var live = false;
-  var heartrate = 60;
   var timestamp;
   
   // if (live) {
@@ -65,9 +64,9 @@ $(document).ready(function() {
       var str = m.tz('America/Chicago').format('h:mm:ss A'); 
       $('#clock').html('LIVE • '+str);
     }
-    $.getJSON('https://followmyheart.herokuapp.com/get_hr', function(data) {
-    //$.getJSON('/get_hr', function(data) {
-      //console.log(data)
+    //$.getJSON('https://followmyheart.herokuapp.com/get_hr', function(data) {
+    $.getJSON('/get_hr', function(data) {
+      console.log(data)
       heartrate = data.hr;
       timestamp = data.ts;
     });

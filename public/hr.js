@@ -1,25 +1,29 @@
 $(document).ready(function() {
 
   var live = false;
+  var heartrate = 60;
+  var timestamp;
   
-  if (live) {
-    setInterval(updateLiveHR, 1000);
-  } else {
-    var data;
-    var ind = 0;
-    var start_time;
-    var total_time;
+  // if (live) {
+  //   setInterval(updateLiveHR, 1000);
+  // } else {
+  //   var data;
+  //   var ind = 0;
+  //   var start_time;
+  //   var total_time;
 
-    $.getJSON('hr.json', function(d, error) {
-      data = d;
+  //   $.getJSON('hr.json', function(d, error) {
+  //     data = d;
 
-      start_time = data[0].timestamp;
-      total_time = data[data.length-1].timestamp - start_time;
+  //     start_time = data[0].timestamp;
+  //     total_time = data[data.length-1].timestamp - start_time;
 
-      updatePlaybackHR();
-      setInterval(updatePlaybackHR, 1000);
-    });
-  }
+  //     updatePlaybackHR();
+  //     setInterval(updatePlaybackHR, 1000);
+  //   });
+  // }
+
+  setInterval(updateLiveHR, 1000);
 
   function updatePlaybackHR() {
 
@@ -44,22 +48,28 @@ $(document).ready(function() {
     }
 
     heartrate = data[i].hr;
-    // console.log(offset + start_time, ind);
-    
-    // $('#hr').html(data[ind].hr);
   }
 
   function updateLiveHR() {
 
-    var date = new Date();
-    var m = moment(date)
-    var str = m.tz('America/Chicago').format('h:mm:ss A'); 
-    $('#clock').html('LIVE • '+str);
 
+
+    if (timestamp) {
+      var date = new Date(timestamp);
+      var m = moment(date).tz('America/Chicago'); 
+      // console.log(m.tz('America/Chicago'));
+      $('#clock').html(m.format('D')+' March 2015 • '+m.format('h:mm:ss A'));
+    } else if (live) { // LIVE
+      var date = new Date();
+      var m = moment(date)
+      var str = m.tz('America/Chicago').format('h:mm:ss A'); 
+      $('#clock').html('LIVE • '+str);
+    }
     $.getJSON('https://followmyheart.herokuapp.com/get_hr', function(data) {
-      // $('#hr').html(data.hr);
+    //$.getJSON('/get_hr', function(data) {
       //console.log(data)
       heartrate = data.hr;
+      timestamp = data.ts;
     });
   }
 });

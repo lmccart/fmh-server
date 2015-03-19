@@ -66,7 +66,7 @@ $(document).ready(function() {
     }
     $.getJSON('https://followmyheart.herokuapp.com/get_hr', function(data) {
     //$.getJSON('/get_hr', function(data) {
-      console.log(data)
+      //console.log(data)
       heartrate = data.hr;
       timestamp = data.ts;
     });

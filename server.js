@@ -13,6 +13,7 @@ var assert = require('assert');
 var stored_hr; // db collection
 var playback_hr;
 var start_time;
+var end_time;
 var total_time;
 
 // Use connect method to connect to the Server
@@ -27,8 +28,11 @@ MongoClient.connect(process.env.MONGOLAB_URI, function(err, db) {
     console.log('loaded playback');
 
     start_time = playback_hr[0].timestamp;
-    total_time = playback_hr[playback_hr.length-1].timestamp - start_time;
+    end_time = playback_hr[playback_hr.length-1].timestamp;
+    total_time = end_time - start_time;
     setInterval(updatePlaybackHR, 1000);
+
+    console.log(start_time, total_time);
   });
 
 
@@ -89,7 +93,7 @@ app.use(express.static(__dirname + '/public'));
 
 function updatePlaybackHR() {
 
-  var offset = Date.now()%total_time;
+  var offset = (Date.now()-end_time)%total_time;
 
   var past_date = new Date(offset + start_time);
 

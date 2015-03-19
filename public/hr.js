@@ -51,24 +51,31 @@ $(document).ready(function() {
 
   function updateLiveHR() {
 
-
-
     if (timestamp) {
+      var now_time = Date.now();
+      if (!last_time) last_time = now_time;
+      timestamp += now_time - last_time;
+      last_time = now_time;
+
       var date = new Date(timestamp);
       var m = moment(date).tz('America/Chicago'); 
       // console.log(m.tz('America/Chicago'));
       $('#clock').html(m.format('D')+' March 2015 • '+m.format('h:mm:ss A'));
-    } else if (live) { // LIVE
-      var date = new Date();
-      var m = moment(date)
-      var str = m.tz('America/Chicago').format('h:mm:ss A'); 
-      $('#clock').html('LIVE • '+str);
+    } else {
+      last_time = Date.now();
     }
-    $.getJSON('https://followmyheart.herokuapp.com/get_hr', function(data) {
-    //$.getJSON('/get_hr', function(data) {
+
+    // if (live) { // LIVE
+    //   var date = new Date();
+    //   var m = moment(date)
+    //   var str = m.tz('America/Chicago').format('h:mm:ss A'); 
+    //   $('#clock').html('LIVE • '+str);
+    // }
+    //$.getJSON('https://followmyheart.herokuapp.com/get_hr', function(data) {
+    $.getJSON('/get_hr', function(data) {
       //console.log(data)
       heartrate = data.hr;
-      timestamp = data.ts;
+      if (!timestamp) timestamp = data.ts;
     });
   }
 });

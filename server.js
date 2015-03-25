@@ -96,9 +96,9 @@ function updatePlaybackHR() {
 
   var offset = (Date.now()-end_time)%total_time;
 
-  if (ind == playback_hr.length - 1) {
-    ind = 0;
-  }
+  // if (offset + start_time > playback_hr[ind].timestamp && ind == playback_hr.length - 1) {
+  //   ind = 0;
+  // }
 
   for (var i=ind; i<playback_hr.length; i++) {
     if (playback_hr[i].timestamp < offset + start_time) {

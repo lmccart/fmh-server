@@ -1,0 +1,6 @@
+import fileinput
+for line in fileinput.FileInput("file",inplace=1):
+    line = line.replace("+12}","+12},")
+    line = line.replace(",,",",")
+    print(line, end='')
+node

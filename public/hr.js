@@ -3,26 +3,25 @@ $(document).ready(function() {
   var live = false;
   var timestamp;
   
-  // if (live) {
-  //   setInterval(updateLiveHR, 1000);
-  // } else {
-  //   var data;
-  //   var ind = 0;
-  //   var start_time;
-  //   var total_time;
+  if (live) {
+    setInterval(updateLiveHR, 1000);
+  } else {
+    var data;
+    var ind = 0;
+    var start_time;
+    var total_time;
 
-  //   $.getJSON('hr.json', function(d, error) {
-  //     data = d;
+    $.getJSON('hr-all.json', function(d, error) {
+      data = d;
 
-  //     start_time = data[0].timestamp;
-  //     total_time = data[data.length-1].timestamp - start_time;
+      start_time = data[0][0];
+      total_time = data[data.length-1][0] - start_time;
 
-  //     updatePlaybackHR();
-  //     setInterval(updatePlaybackHR, 1000);
-  //   });
-  // }
+      updatePlaybackHR();
+      setInterval(updatePlaybackHR, 1000);
+    });
+  }
 
-  setInterval(updateLiveHR, 1000);
 
   function updatePlaybackHR() {
 
@@ -34,19 +33,19 @@ $(document).ready(function() {
 
     $('#clock').html(past_date.getDate()+' March 2015 • '+m.tz('America/Chicago').format('h:mm:ss A'));
 
-    if (data[ind].timestamp > offset + start_time) {
+    if (data[ind][0] > offset + start_time) {
       ind = 0;
     }
 
     for (var i=ind; i<data.length; i++) {
-      if (data[i].timestamp < offset + start_time) {
+      if (data[i][0] < offset + start_time) {
         ind = i;
       } else {
         break;
       }
     }
 
-    heartrate = data[i].hr;
+    heartrate = data[i][1];
   }
 
   function updateLiveHR() {

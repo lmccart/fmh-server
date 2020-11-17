@@ -236,6 +236,7 @@ window.addEventListener('load', function () {
         }
 
         var heartbeat = function () {
+            // console.log(heartrate)
             var heartStyle = map(heartrate, 60, 120, 0, 1);
 
             sim.friction = lerp(heartStyle, .4, .8);
